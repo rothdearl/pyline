@@ -58,8 +58,7 @@ def line_has_find_match(patterns: List[str], line: str) -> bool:
                 has_match = True
                 break
     except re.error:
-        if not Globals.options.quiet:
-            print_error_message(f"invalid regex pattern: {pattern}")
+        print_error_message(f"invalid regex pattern: {pattern}")
 
     return has_match
 
@@ -81,8 +80,7 @@ def line_has_find_matches(patterns: List[str], line: str) -> bool:
                 has_match = False
                 break
     except re.error:
-        if not Globals.options.quiet:
-            print_error_message(f"invalid regex pattern: {pattern}")
+        print_error_message(f"invalid regex pattern: {pattern}")
 
     return has_match
 
@@ -168,7 +166,9 @@ def print_error_message(message: str) -> None:
     :param message: The message to print.
     :return: None
     """
-    print(f"error: {message}", file=sys.stderr)
+    if not Globals.options.quiet:
+        print(f"error: {message}", file=sys.stderr)
+
     raise SystemExit()  # Stop processing.
 
 
@@ -218,11 +218,9 @@ def process_files(files) -> None:
 
                     print_lines()
         except FileNotFoundError:
-            if not Globals.options.quiet:
-                print_error_message(f"no such file or directory: {file}")
+            print_error_message(f"no such file or directory: {file}")
         except UnicodeDecodeError:
-            if not Globals.options.quiet:
-                print(f"unable to decode file: {file}")
+            print(f"unable to decode file: {file}")
 
 
 def process_line_with_options(line: str, line_number: int) -> bool:
@@ -359,8 +357,7 @@ def replace_from_line(patterns: List[str], replacement: str, line: str) -> str:
         for pattern in patterns:
             line = re.sub(pattern, replacement, line, flags=flags)
     except re.error:
-        if not Globals.options.quiet:
-            print_error_message(f"invalid regex pattern: {pattern}")
+        print_error_message(f"invalid regex pattern: {pattern}")
 
     return line
 
