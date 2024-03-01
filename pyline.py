@@ -13,13 +13,15 @@ class Globals:
     """
     Class for managing global constants and instances across the entire application.
     """
-    COLOR_FILE_NAME: str = "\033[0;36m"  # Cyan
-    COLOR_LINE_NUMBER: str = "\033[0;93m"  # High intensity yellow
-    COLOR_MATCH: str = "\033[0;91m"  # High intensity red
-    COLOR_RESET: str = "\033[0m"
+    COLOR_FILE_NAME: Final[str] = "\033[0;36m"  # Cyan
+    COLOR_LINE_NUMBER: Final[str] = "\033[0;93m"  # High intensity yellow
+    COLOR_MATCH: Final[str] = "\033[0;91m"  # High intensity red
+    COLOR_RESET: Final[str] = "\033[0m"
     lines_to_print: Final[List[str]] = []
     options: argparse.Namespace
     repeated_blank_lines: int
+    stdin_is_pipe: bool = False
+    stdout_is_pipe: bool = False
     TAB: Final[str] = ">··"
     VERSION: Final[str] = "1.9.1"
 
@@ -92,17 +94,14 @@ def main() -> None:
     """
     parse_arguments()
 
-    # If stdout is to a pipe, don't print colors.
-    if stdout_is_pipe():
-        Globals.COLOR_FILE_NAME = ""
-        Globals.COLOR_LINE_NUMBER = ""
-        Globals.COLOR_MATCH = ""
-        Globals.COLOR_RESET = ""
+    # Check if the lines are being piped.
+    Globals.stdin_is_pipe = not os.isatty(sys.stdin.fileno())
+    Globals.stdout_is_pipe = not os.isatty(sys.stdout.fileno())
 
     try:
-        # Process from stdin if the input is from a pipe. Otherwise, process files from the command line.
-        if stdin_is_pipe():
-            if Globals.options.pif:
+        # If the input is from a pipe, process from stdin. Otherwise, process files from the command line.
+        if Globals.stdin_is_pipe:
+            if Globals.options.pif:  # Option: --pif
                 process_files(sys.stdin)
             else:
                 process_lines(sys.stdin)
@@ -178,7 +177,10 @@ def print_file_name(file_name: str) -> None:
     :param file_name: The file name.
     :return: None
     """
-    print("[{0}{1}{2}]".format(Globals.COLOR_FILE_NAME, file_name, Globals.COLOR_RESET))
+    if Globals.stdout_is_pipe:
+        print(f"[{file_name}]")
+    else:
+        print(f"[{Globals.COLOR_FILE_NAME}{file_name}{Globals.COLOR_RESET}]")
 
 
 def print_lines() -> None:
@@ -273,7 +275,7 @@ def process_line_with_options(line: str, line_number: int) -> bool:
             line = line.expandtabs(Globals.options.change_tabs)
 
         # Option: --highlight
-        if Globals.options.highlight:
+        if Globals.options.highlight and not Globals.stdout_is_pipe:
             if Globals.options.find_all:
                 line = highlight_matches(Globals.options.find_all, line)
             elif Globals.options.find:
@@ -300,8 +302,11 @@ def process_line_with_options(line: str, line_number: int) -> bool:
 
         # Option: --line-numbers and --number-lines
         if Globals.options.line_numbers or Globals.options.number_lines:
-            Globals.lines_to_print.append(
-                f"{Globals.COLOR_LINE_NUMBER}{line_number:>4}:{Globals.COLOR_RESET} {wrap_first}{line}{wrap_last}")
+            if Globals.stdout_is_pipe:
+                Globals.lines_to_print.append(f"{line_number:>4}: {wrap_first}{line}{wrap_last}")
+            else:
+                Globals.lines_to_print.append(
+                    f"{Globals.COLOR_LINE_NUMBER}{line_number:>4}:{Globals.COLOR_RESET} {wrap_first}{line}{wrap_last}")
         else:
             Globals.lines_to_print.append(f"{wrap_first}{line}{wrap_last}")
 
@@ -360,22 +365,6 @@ def replace_from_line(patterns: List[str], replacement: str, line: str) -> str:
         print_error_message(f"invalid regex pattern: {pattern}")
 
     return line
-
-
-def stdin_is_pipe() -> bool:
-    """
-    Returns True if stdin is connected to a pipe.
-    :return: True or False.
-    """
-    return not os.isatty(sys.stdin.fileno())
-
-
-def stdout_is_pipe() -> bool:
-    """
-    Returns True if stdout is connected to a pipe.
-    :return: True or False.
-    """
-    return not os.isatty(sys.stdout.fileno())
 
 
 def trim_line(line: str) -> str:
