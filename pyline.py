@@ -13,15 +13,15 @@ class Globals:
     """
     Class for managing global constants and instances across the entire application.
     """
-    COLOR_RESET: Final[str] = "\033[0m"
-    FILE_NAME_COLOR: Final[str] = "\033[0;36m"  # Cyan
-    LINE_NUMBER_COLOR: Final[str] = "\033[0;93m"  # High intensity yellow
-    lines_to_print: List[str] = []
-    MATCH_COLOR: Final[str] = "\033[0;91m"  # High intensity red
+    COLOR_FILE_NAME: str = "\033[0;36m"  # Cyan
+    COLOR_LINE_NUMBER: str = "\033[0;93m"  # High intensity yellow
+    COLOR_MATCH: str = "\033[0;91m"  # High intensity red
+    COLOR_RESET: str = "\033[0m"
+    lines_to_print: Final[List[str]] = []
     options: argparse.Namespace
     repeated_blank_lines: int
     TAB: Final[str] = ">··"
-    VERSION: Final[str] = "1.9.0"
+    VERSION: Final[str] = "1.9.1"
 
 
 def highlight_matches(patterns: List[str], line: str) -> str:
@@ -36,7 +36,7 @@ def highlight_matches(patterns: List[str], line: str) -> str:
     for pattern in patterns:
         if match := re.search(pattern, line, flags=flags):
             replace = line[match.start():match.end()]
-            line = line.replace(replace, f"{Globals.MATCH_COLOR}{replace}{Globals.COLOR_RESET}")
+            line = line.replace(replace, f"{Globals.COLOR_MATCH}{replace}{Globals.COLOR_RESET}")
 
     return line
 
@@ -94,6 +94,13 @@ def main() -> None:
     """
     parse_arguments()
 
+    # If stdout is to a pipe, don't print colors.
+    if stdout_is_pipe():
+        Globals.COLOR_FILE_NAME = ""
+        Globals.COLOR_LINE_NUMBER = ""
+        Globals.COLOR_MATCH = ""
+        Globals.COLOR_RESET = ""
+
     try:
         # Process from stdin if the input is from a pipe. Otherwise, process files from the command line.
         if stdin_is_pipe():
@@ -111,16 +118,6 @@ def main() -> None:
         pass  # Process interrupted; exit quietly.
 
 
-def print_error_message(message: str) -> None:
-    """
-    Prints an error message.
-    :param message: The message to print.
-    :return: None
-    """
-    print(f"error: {message}", file=sys.stderr)
-    raise SystemExit()  # Stop processing.
-
-
 def parse_arguments() -> None:
     """
     Parses the command line arguments to get the program options.
@@ -133,7 +130,7 @@ def parse_arguments() -> None:
     search = parser.add_argument_group("search options")
 
     parser.add_argument("files", help="files to process lines from", metavar="files", nargs="*")
-    parser.add_argument("-a", "--add-newline", action="store_true", help="add a newline after all processing")
+    parser.add_argument("-a", "--add-newline", action="store_true", help="add a newline after processing")
     parser.add_argument("-e", "--escape", action="store_true", help="escape\\ white\\ space")
     parser.add_argument("-i", "--ignore-blank", action="store_true", help="ignore blank lines")
     parser.add_argument("-l", "--trim-leading", action="store_true", help="trim leading whitespace")
@@ -165,13 +162,23 @@ def parse_arguments() -> None:
     Globals.options = parser.parse_args()
 
 
+def print_error_message(message: str) -> None:
+    """
+    Prints an error message.
+    :param message: The message to print.
+    :return: None
+    """
+    print(f"error: {message}", file=sys.stderr)
+    raise SystemExit()  # Stop processing.
+
+
 def print_file_name(file_name: str) -> None:
     """
     Prints the file name.
     :param file_name: The file name.
     :return: None
     """
-    print("[{0}{1}{2}]".format(Globals.FILE_NAME_COLOR, file_name, Globals.COLOR_RESET))
+    print("[{0}{1}{2}]".format(Globals.COLOR_FILE_NAME, file_name, Globals.COLOR_RESET))
 
 
 def print_lines() -> None:
@@ -296,7 +303,7 @@ def process_line_with_options(line: str, line_number: int) -> bool:
         # Option: --line-numbers and --number-lines
         if Globals.options.line_numbers or Globals.options.number_lines:
             Globals.lines_to_print.append(
-                f"{Globals.LINE_NUMBER_COLOR}{line_number:>4}:{Globals.COLOR_RESET} {wrap_first}{line}{wrap_last}")
+                f"{Globals.COLOR_LINE_NUMBER}{line_number:>4}:{Globals.COLOR_RESET} {wrap_first}{line}{wrap_last}")
         else:
             Globals.lines_to_print.append(f"{wrap_first}{line}{wrap_last}")
 
@@ -323,7 +330,8 @@ def process_lines(lines) -> None:
         if lined_added or Globals.options.line_numbers:
             line_number += 1
 
-    if Globals.options.add_newline:
+    # Option: --add-newline
+    if Globals.lines_to_print and Globals.options.add_newline:
         Globals.lines_to_print.append(str())
 
 
@@ -363,6 +371,14 @@ def stdin_is_pipe() -> bool:
     :return: True or False.
     """
     return not os.isatty(sys.stdin.fileno())
+
+
+def stdout_is_pipe() -> bool:
+    """
+    Returns True if stdout is connected to a pipe.
+    :return: True or False.
+    """
+    return not os.isatty(sys.stdout.fileno())
 
 
 def trim_line(line: str) -> str:

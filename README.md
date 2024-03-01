@@ -1,6 +1,6 @@
 ## pyline: A Python line processor
 
-**Version:** 1.9.0
+**Version:** 1.9.1
 
 ### Overview
 
@@ -149,7 +149,7 @@ positional arguments:
 
 options:
   -h, --help                            show this help message and exit
-  -a, --add-newline                     add a newline after all processing
+  -a, --add-newline                     add a newline after processing
   -e, --escape                          escape\ white\ space
   -i, --ignore-blank                    ignore blank lines
   -l, --trim-leading                    trim leading whitespace
