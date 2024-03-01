@@ -72,38 +72,48 @@ pyline [file] -t
 There are four options for searching for patterns in lines; `--find`, `--find-all`, `--exclude` and `--exclude-all`.
 Each option takes an arbitrary list of patterns. `--find` and `--exclude` act like an `or` operator whereas `--find-all`
 and `--exclude-all` act like an `and` operator. Additional options are `--ignore-case`, which performs case-insensitive
-pattern matching, and `--highlight`, which adds a highlight color to a find match when printed.
+pattern matching, and `--highlight`, which adds a highlight color to a find match when printed. **pyline** supports
+regex patterns, but to avoid being interpreted by the shell, wrap the patterns in quotes.
 
 **Examples:**
 
-Find all files that end in ".java" and display files names that contain "api" or "util":
+Find all files that end in ".java" and display file names that contain "api" or "util":
 
 ```bash
 find ./ -iname "*.java" | pyline --find api util
 ```
 
-Find all files that end in ".java" and display files that contain "api" and "test" regardless of case and highlight the
+Find all files that end in ".java" and display file names that contain "api" and "test" regardless of case and highlight
+the
 patterns:
 
 ```bash
 find ./ -iname "*.java" | pyline --find-all api util --ignore-case --highlight
 ```
 
-Find all files that end in ".java" and display files names that do not contain "api" and "test" regardless of case:
+Find all files that end in ".java" and display file names that do not contain "api" and "test" regardless of case:
 
 ```bash
 find ./ -iname "*.java" | pyline --exclude-all api util --ignore-case
 ```
 
-Find all files that end in ".java" and display files that contain "test" but exclude files that contain "util"
-regardless
-of case. Highlight the patterns and number the lines that get printed:
+Find all files that end in ".java" and display file names that contain "test" but exclude files that contain "util"
+regardless of case. Highlight the patterns and number the lines that get printed:
 
 ```bash
 find ./ -iname "*.java" | pyline --find test --exclude util --ignore-case --highlight --number-lines
 ```
 
 ![find.png](./screenshots/find.png)
+
+Find all files that end in ".java" and display files that contain the pattern `return.*Options(`. Highlight the patterns
+and show its line number:
+
+```bash
+find ./ -iname "*.java" | pyline --pif --find "return.*Options\(" --highlight -n
+```
+
+![find.png](./screenshots/find-regex.png)
 
 ### PIF
 
