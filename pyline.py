@@ -162,7 +162,7 @@ def parse_arguments() -> None:
 
 def print_error_message(message: str) -> None:
     """
-    Prints an error message.
+    Prints an error message and stops processing.
     :param message: The message to print.
     :return: None
     """
