@@ -95,6 +95,16 @@ Find all files that end in ".java" and display files names that do not contain "
 find ./ -iname "*.java" | pyline --exclude-all api util --ignore-case
 ```
 
+Find all files that end in ".java" and display files that contain "test" but exclude files that contain "util"
+regardless
+of case. Highlight the patterns and number the lines that get printed:
+
+```bash
+find ./ -iname "*.java" | pyline --find test --exclude util --ignore-case --highlight --number-lines
+```
+
+![find.png](./screenshots/find.png)
+
 ### PIF
 
 `--pif` tells **pyline** that the piped input is files. **pyline** will apply the options to the contents of the files
