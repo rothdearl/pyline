@@ -23,7 +23,7 @@ class Globals:
     STDIN_IS_PIPE: Final[bool] = not os.isatty(sys.stdin.fileno())
     STDOUT_IS_PIPE: Final[bool] = not os.isatty(sys.stdout.fileno())
     TAB: Final[str] = ">··"
-    VERSION: Final[str] = "1.9.2"
+    VERSION: Final[str] = "1.9.3"
 
 
 def highlight_matches(patterns: List[str], line: str) -> str:
@@ -124,8 +124,8 @@ def parse_arguments() -> None:
 
     parser.add_argument("files", help="files to process lines from", metavar="files", nargs="*")
     parser.add_argument("-a", "--add-newline", action="store_true", help="add a newline after processing")
+    parser.add_argument("-b", "--ignore-blank", action="store_true", help="ignore blank lines")
     parser.add_argument("-e", "--escape", action="store_true", help="escape\\ white\\ space")
-    parser.add_argument("-i", "--ignore-blank", action="store_true", help="ignore blank lines")
     parser.add_argument("-l", "--trim-leading", action="store_true", help="trim leading whitespace")
     line_numbers.add_argument("-n", "--line-numbers", action="store_true", help="show line numbers")
     line_numbers.add_argument("-o", "--number-lines", action="store_true", help="number printed lines")
@@ -142,14 +142,14 @@ def parse_arguments() -> None:
                         help="if --pif, display just the file name when find or exclude patterns are found")
 
     # Search options.
-    search.add_argument("--find", help="find lines that contain any pattern", metavar="pattern", nargs="+")
+    search.add_argument("-f", "--find", help="find lines that contain any pattern", metavar="pattern", nargs="+")
     search.add_argument("--find-all", help="find lines that contain all patterns", metavar="pattern", nargs="+")
-    search.add_argument("--exclude", help="exclude lines that contain any pattern", metavar="pattern", nargs="+")
+    search.add_argument("-x", "--exclude", help="exclude lines that contain any pattern", metavar="pattern", nargs="+")
     search.add_argument("--exclude-all", help="exclude lines that contain all patterns", metavar="pattern", nargs="+")
-    search.add_argument("--replace", help="replace any pattern", metavar=("pattern", "replace"), nargs=2)
-    search.add_argument("--yank", help="yank any pattern from lines", metavar="pattern", nargs="+")
+    search.add_argument("-r", "--replace", help="replace any pattern", metavar=("pattern", "replace"), nargs=2)
+    search.add_argument("-y", "--yank", help="yank any pattern from lines", metavar="pattern", nargs="+")
     search.add_argument("--highlight", action="store_true", help="highlight matches in lines")
-    search.add_argument("--ignore-case", action="store_true", help="ignore case when pattern matching")
+    search.add_argument("-i", "--ignore-case", action="store_true", help="ignore case when pattern matching")
 
     # Parse the arguments.
     Globals.options = parser.parse_args()

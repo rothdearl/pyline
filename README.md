@@ -1,6 +1,6 @@
 ## pyline: A Python line processor
 
-**Version:** 1.9.2
+**Version:** 1.9.3
 
 ### Overview
 
@@ -157,10 +157,10 @@ pyline -h
 ```
 
 ```
-usage: pyline.py [-h] [-a] [-e] [-i] [-l] [-q] [-s] [-t] [-v] [-w ^ $] [--change-tabs n] [--show-tabs] [--pif] [--iso]
-                 [--name-only] [--find pattern [pattern ...]] [--find-all pattern [pattern ...]] [--exclude pattern [pattern ...]]
-                 [--exclude-all pattern [pattern ...]] [--replace pattern replace] [--yank pattern [pattern ...]]
-                 [--highlight] [--ignore-case] [-n | -o] [files ...]
+usage: pyline.py [-h] [-a] [-b] [-e] [-l] [-n | -o] [-q] [-s] [-t] [-v] [-w ^ $] [--change-tabs n] [--show-tabs] [--pif]
+                 [--iso] [--name-only] [-f pattern [pattern ...]] [--find-all pattern [pattern ...]]
+                 [-x pattern [pattern ...]] [--exclude-all pattern [pattern ...]] [-r pattern replace]
+                 [-y pattern [pattern ...]] [--highlight] [-i] [files ...]
 
 utility for processing lines of input.
 
@@ -170,8 +170,8 @@ positional arguments:
 options:
   -h, --help                            show this help message and exit
   -a, --add-newline                     add a newline after processing
+  -b, --ignore-blank                    ignore blank lines
   -e, --escape                          escape\ white\ space
-  -i, --ignore-blank                    ignore blank lines
   -l, --trim-leading                    trim leading whitespace
   -n, --line-numbers                    show line numbers
   -o, --number-lines                    number printed lines
@@ -187,14 +187,14 @@ options:
   --name-only                           if --pif, display just the file name when find or exclude patterns are found
 
 search options:
-  --find pattern [pattern ...]          find lines that contain any pattern
+  -f, --find pattern [pattern ...]      find lines that contain any pattern
   --find-all pattern [pattern ...]      find lines that contain all patterns
-  --exclude pattern [pattern ...]       exclude lines that contain any pattern
+  -x, --exclude pattern [pattern ...]   exclude lines that contain any pattern
   --exclude-all pattern [pattern ...]   exclude lines that contain all patterns
-  --replace pattern replace             replace any pattern
-  --yank pattern [pattern ...]          yank any pattern from lines
+  -r, --replace pattern replace         replace any pattern
+  -y, --yank pattern [pattern ...]      yank any pattern from lines
   --highlight                           highlight matches in lines
-  --ignore-case                         ignore case when pattern matching
+  -i, --ignore-case                     ignore case when pattern matching
 
 files after a find, exclude or yank will be treated as patterns
 ```
