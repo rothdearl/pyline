@@ -17,13 +17,13 @@ class Globals:
     COLOR_LINE_NUMBER: Final[str] = "\033[0;93m"  # High intensity yellow
     COLOR_MATCH: Final[str] = "\033[0;91m"  # High intensity red
     COLOR_RESET: Final[str] = "\033[0m"
-    lines_to_print: Final[List[str]] = []
+    LINES_TO_PRINT: Final[List[str]] = []
     options: argparse.Namespace
     repeated_blank_lines: int
-    stdin_is_pipe: bool = False
-    stdout_is_pipe: bool = False
+    STDIN_IS_PIPE: Final[bool] = not os.isatty(sys.stdin.fileno())
+    STDOUT_IS_PIPE: Final[bool] = not os.isatty(sys.stdout.fileno())
     TAB: Final[str] = ">··"
-    VERSION: Final[str] = "1.9.1"
+    VERSION: Final[str] = "1.9.2"
 
 
 def highlight_matches(patterns: List[str], line: str) -> str:
@@ -94,13 +94,9 @@ def main() -> None:
     """
     parse_arguments()
 
-    # Check if the lines are being piped.
-    Globals.stdin_is_pipe = not os.isatty(sys.stdin.fileno())
-    Globals.stdout_is_pipe = not os.isatty(sys.stdout.fileno())
-
     try:
         # If the input is from a pipe, process from stdin. Otherwise, process files from the command line.
-        if Globals.stdin_is_pipe:
+        if Globals.STDIN_IS_PIPE:
             if Globals.options.pif:  # Option: --pif
                 process_files(sys.stdin)
             else:
@@ -177,10 +173,13 @@ def print_file_name(file_name: str) -> None:
     :param file_name: The file name.
     :return: None
     """
-    if Globals.stdout_is_pipe:
+    if Globals.STDOUT_IS_PIPE:
         print(f"[{file_name}]")
     else:
-        print(f"[{Globals.COLOR_FILE_NAME}{file_name}{Globals.COLOR_RESET}]")
+        left_bracket = f"\033[1m[{Globals.COLOR_RESET}"  # Bold
+        right_bracket = f"\033[1m]{Globals.COLOR_RESET}"  # Bold
+
+        print(f"{left_bracket}{Globals.COLOR_FILE_NAME}{file_name}{Globals.COLOR_RESET}{right_bracket}")
 
 
 def print_lines() -> None:
@@ -188,7 +187,7 @@ def print_lines() -> None:
     Prints the lines.
     :return: None
     """
-    for line in Globals.lines_to_print:
+    for line in Globals.LINES_TO_PRINT:
         print(line)
 
 
@@ -210,7 +209,7 @@ def process_files(files) -> None:
                 with open(file, "r", encoding=encoding) as lines:
                     process_lines(lines.readlines())
 
-            if Globals.lines_to_print:
+            if Globals.LINES_TO_PRINT:
                 # The "name_only" option is only when a find or exclude was provided.
                 if Globals.options.name_only and (Globals.options.find or Globals.options.exclude):
                     print(file)
@@ -275,7 +274,7 @@ def process_line_with_options(line: str, line_number: int) -> bool:
             line = line.expandtabs(Globals.options.change_tabs)
 
         # Option: --highlight
-        if Globals.options.highlight and not Globals.stdout_is_pipe:
+        if Globals.options.highlight and not Globals.STDOUT_IS_PIPE:
             if Globals.options.find_all:
                 line = highlight_matches(Globals.options.find_all, line)
             elif Globals.options.find:
@@ -302,13 +301,13 @@ def process_line_with_options(line: str, line_number: int) -> bool:
 
         # Option: --line-numbers and --number-lines
         if Globals.options.line_numbers or Globals.options.number_lines:
-            if Globals.stdout_is_pipe:
-                Globals.lines_to_print.append(f"{line_number:>4}: {wrap_first}{line}{wrap_last}")
+            if Globals.STDOUT_IS_PIPE:
+                Globals.LINES_TO_PRINT.append(f"{line_number:>4}: {wrap_first}{line}{wrap_last}")
             else:
-                Globals.lines_to_print.append(
+                Globals.LINES_TO_PRINT.append(
                     f"{Globals.COLOR_LINE_NUMBER}{line_number:>4}:{Globals.COLOR_RESET} {wrap_first}{line}{wrap_last}")
         else:
-            Globals.lines_to_print.append(f"{wrap_first}{line}{wrap_last}")
+            Globals.LINES_TO_PRINT.append(f"{wrap_first}{line}{wrap_last}")
 
     return can_print
 
@@ -323,7 +322,7 @@ def process_lines(lines) -> None:
     line_number = 1
 
     # Clear any previous line processing.
-    Globals.lines_to_print.clear()
+    Globals.LINES_TO_PRINT.clear()
     Globals.repeated_blank_lines = 0
 
     for line in lines:
@@ -334,8 +333,8 @@ def process_lines(lines) -> None:
             line_number += 1
 
     # Option: --add-newline
-    if Globals.lines_to_print and Globals.options.add_newline:
-        Globals.lines_to_print.append(str())
+    if Globals.LINES_TO_PRINT and Globals.options.add_newline:
+        Globals.LINES_TO_PRINT.append(str())
 
 
 def remove_newline(string: str) -> str:
