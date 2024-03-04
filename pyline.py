@@ -23,7 +23,7 @@ class Globals:
     STDIN_IS_PIPE: Final[bool] = not os.isatty(sys.stdin.fileno())
     STDOUT_IS_PIPE: Final[bool] = not os.isatty(sys.stdout.fileno())
     TAB: Final[str] = ">··"
-    VERSION: Final[str] = "1.9.3"
+    VERSION: Final[str] = "1.9.4"
 
 
 def highlight_matches(patterns: List[str], line: str) -> str:
@@ -128,7 +128,7 @@ def parse_arguments() -> None:
     parser.add_argument("-e", "--escape", action="store_true", help="escape\\ white\\ space")
     parser.add_argument("-l", "--trim-leading", action="store_true", help="trim leading whitespace")
     line_numbers.add_argument("-n", "--line-numbers", action="store_true", help="show line numbers")
-    line_numbers.add_argument("-o", "--number-lines", action="store_true", help="number printed lines")
+    line_numbers.add_argument("-o", "--number-output", action="store_true", help="number output lines")
     parser.add_argument("-q", "--quiet", action="store_true", help="no file name headers or error messages")
     parser.add_argument("-s", "--squeeze-blank", action="store_true", help="suppress repeated blank lines")
     parser.add_argument("-t", "--trim-trailing", action="store_true", help="trim trailing whitespace")
@@ -299,8 +299,8 @@ def process_line_with_options(line: str, line_number: int) -> bool:
             wrap_first = Globals.options.wrap[0]
             wrap_last = Globals.options.wrap[1]
 
-        # Option: --line-numbers and --number-lines
-        if Globals.options.line_numbers or Globals.options.number_lines:
+        # Option: --line-numbers and --number-output
+        if Globals.options.line_numbers or Globals.options.number_output:
             if Globals.STDOUT_IS_PIPE:
                 Globals.LINES_TO_PRINT.append(f"{line_number:>4}: {wrap_first}{line}{wrap_last}")
             else:

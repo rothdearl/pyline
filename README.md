@@ -1,6 +1,6 @@
 ## pyline: A Python line processor
 
-**Version:** 1.9.3
+**Version:** 1.9.4
 
 ### Overview
 
@@ -80,7 +80,7 @@ regex patterns, but to avoid being interpreted by the shell, wrap the patterns i
 Find all files that end in ".java" and display file names that contain "api" or "util":
 
 ```bash
-find ./ -iname "*.java" | pyline --find api util
+find ./ -iname "*.java" | pyline -f api util
 ```
 
 Find all files that end in ".java" and display file names that contain "api" and "test" regardless of case and highlight
@@ -101,7 +101,7 @@ Find all files that end in ".java" and display file names that contain "test" bu
 regardless of case. Highlight the patterns and number the lines that get printed:
 
 ```bash
-find ./ -iname "*.java" | pyline --find test --exclude util --ignore-case --highlight --number-lines
+find ./ -iname "*.java" | pyline -f test -x util --ignore-case --highlight --number-lines
 ```
 
 ![find.png](./screenshots/find.png)
@@ -110,7 +110,7 @@ Find all files that end in ".java" and display files that contain the pattern `r
 and show its line number:
 
 ```bash
-find ./ -iname "*.java" | pyline --pif --find "return.*Options\(" --highlight -n
+find ./ -iname "*.java" | pyline --pif -f "return.*Options\(" --highlight -n
 ```
 
 ![find.png](./screenshots/find-regex.png)
@@ -127,19 +127,19 @@ deleting files that contain or don't contain a pattern.
 Find all files that end in ".java" and display the lines from the files that contain the text "util":
 
 ```bash
-find ./ -iname "*.java" | pyline --find util --pif
+find ./ -iname "*.java" | pyline -f util --pif
 ```
 
 Find all files that end in ".java" and display the file names for files that contain the text "util":
 
 ```bash
-find ./ -iname "*.java" | pyline --find util --pif --name-only
+find ./ -iname "*.java" | pyline -f util --pif --name-only
 ```
 
 Find all files that end in ".java" and display the file names for files that do not contain the text "util":
 
 ```bash
-find ./ -iname "*.java" | pyline --exclude util --pif --name-only
+find ./ -iname "*.java" | pyline -x util --pif --name-only
 ```
 
 ### Editing
@@ -174,7 +174,7 @@ options:
   -e, --escape                          escape\ white\ space
   -l, --trim-leading                    trim leading whitespace
   -n, --line-numbers                    show line numbers
-  -o, --number-lines                    number printed lines
+  -o, --number-output                   number output lines
   -q, --quiet                           no file name headers or error messages
   -s, --squeeze-blank                   suppress repeated blank lines
   -t, --trim-trailing                   trim trailing whitespace
