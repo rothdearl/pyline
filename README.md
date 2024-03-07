@@ -77,6 +77,12 @@ regex patterns, but to avoid being interpreted by the shell, wrap the patterns i
 
 **Examples:**
 
+Find all files that end in ".java" and display the files that contain trailing whitespace:
+
+```bash
+find ./ -iname "*.java" | pyline --pif -f "\s+$"
+```
+
 Find all files that end in ".java" and display file names that contain "api" or "util":
 
 ```bash
@@ -98,16 +104,16 @@ find ./ -iname "*.java" | pyline --exclude-all api util --ignore-case
 ```
 
 Find all files that end in ".java" and display file names that contain "test" but exclude files that contain "util"
-regardless of case. Highlight the patterns and number the lines that get printed:
+regardless of case. Highlight the patterns and number the lines in the output:
 
 ```bash
-find ./ -iname "*.java" | pyline -f test -x util --ignore-case --highlight --number-lines
+find ./ -iname "*.java" | pyline -f test -x util --ignore-case --highlight --number-output
 ```
 
 ![find.png](./screenshots/find.png)
 
 Find all files that end in ".java" and display files that contain the pattern `return.*Options(`. Highlight the patterns
-and show its line number:
+and show their line numbers:
 
 ```bash
 find ./ -iname "*.java" | pyline --pif -f "return.*Options\(" --highlight -n
