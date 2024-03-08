@@ -46,13 +46,13 @@ find ./ -iname "*.txt" | pyline -e
 Wrap in double quotes:
 
 ```bash
-find ./ -iname "*.txt" | pyline --wrap \" \"
+find ./ -iname "*.txt" | pyline -w \" \"
 ```
 
 Wrap in single quotes:
 
 ```bash
-find ./ -iname "*files*" | pyline --wrap \' \'
+find ./ -iname "*files*" | pyline -w \' \'
 ```
 
 Trim leading whitespace:
@@ -94,20 +94,20 @@ the
 patterns:
 
 ```bash
-find ./ -iname "*.java" | pyline --find-all api util --ignore-case --highlight
+find ./ -iname "*.java" | pyline -F api test -Hi
 ```
 
-Find all files that end in ".java" and display file names that do not contain "api" and "test" regardless of case:
+Find all files that end in ".java" and display file names that do not contain "api" and "util" regardless of case:
 
 ```bash
-find ./ -iname "*.java" | pyline --exclude-all api util --ignore-case
+find ./ -iname "*.java" | pyline -X api util -i
 ```
 
 Find all files that end in ".java" and display file names that contain "test" but exclude files that contain "util"
 regardless of case. Highlight the patterns and number the lines in the output:
 
 ```bash
-find ./ -iname "*.java" | pyline -f test -x util --ignore-case --highlight --number-output
+find ./ -iname "*.java" | pyline -f test -x util -Hio
 ```
 
 ![find.png](./screenshots/find.png)
@@ -116,7 +116,7 @@ Find all files that end in ".java" and display files that contain the pattern `r
 and show their line numbers:
 
 ```bash
-find ./ -iname "*.java" | pyline --pif -f "return.*Options\(" --highlight -n
+find ./ -iname "*.java" | pyline --pif -f "return.*Options\(" -Hn
 ```
 
 ![find.png](./screenshots/find-regex.png)
