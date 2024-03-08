@@ -163,10 +163,9 @@ pyline -h
 ```
 
 ```
-usage: pyline [-h] [-a] [-b] [-e] [-l] [-n | -o] [-q] [-s] [-t] [-v] [-w ^ $] [--change-tabs n] [--show-tabs] [--pif]
-              [--iso] [--name-only] [-f pattern [pattern ...] | --find-all pattern [pattern ...]]
-              [-x pattern [pattern ...] | --exclude-all pattern [pattern ...]] [-r pattern replace] [-y pattern [pattern ...]]
-              [-H] [-i] [-c | -S] [files ...]
+usage: pyline [-h] [-a] [-b] [-e] [-l] [-n | -o] [-q] [-s] [-t] [-v] [-w ^ $] [--change-tabs n] [-T] [--pif] [--iso] [-N]
+              [-f pattern [pattern ...] | -F pattern [pattern ...]] [-x pattern [pattern ...] | -X pattern [pattern ...]]
+              [-r pattern replace] [-y pattern [pattern ...]] [-H] [-i] [-c | -S] [files ...]
 
 utility for processing lines of input.
 
@@ -187,10 +186,10 @@ options:
   -v, --version                             show program's version number and exit
   -w ^ $, --wrap ^ $                        ^wrap lines between tokens$
   --change-tabs n                           change tabs to 'n' spaces
-  --show-tabs                               show tabs as >··
+  -T, --show-tabs                           show tabs as >··
   --pif                                     treat piped input as file names
   --iso                                     if --pif, use ISO-8859-1 for encoding instead of UTF-8
-  -N, --name-only                           if --pif, show just the file name when find or exclude patterns are found
+  -N, --name                                if --pif, show just the file name for find or exclude patterns
 
 search options:
   -f, --find pattern [pattern ...]          find lines that contain any pattern
@@ -201,8 +200,8 @@ search options:
   -y, --yank pattern [pattern ...]          yank any pattern from lines
   -H, --highlight                           highlight matches in lines
   -i, --ignore-case                         ignore case when pattern matching
-  -c, --count                               show just the count for found matches
-  -S, --sum                                 show just the sum for all found matches
+  -c, --count                               show just the count for find patterns
+  -S, --sum                                 show just the sum for find patterns
 
 files after a find, exclude or yank will be treated as patterns
 ```

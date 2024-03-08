@@ -152,11 +152,11 @@ def parse_arguments() -> None:
     parser.add_argument("-v", "--version", action="version", version=f"%(prog)s {Globals.VERSION}")
     parser.add_argument("-w", "--wrap", help="^wrap lines between tokens$", metavar=("^", "$"), nargs=2)
     parser.add_argument("--change-tabs", help="change tabs to 'n' spaces", metavar='n', type=int)
-    parser.add_argument("--show-tabs", action="store_true", help=f"show tabs as {Globals.TAB}")
+    parser.add_argument("-T", "--show-tabs", action="store_true", help=f"show tabs as {Globals.TAB}")
     parser.add_argument("--pif", action="store_true", help="treat piped input as file names")
     parser.add_argument("--iso", action="store_true", help="if --pif, use ISO-8859-1 for encoding instead of UTF-8")
-    parser.add_argument("-N", "--name-only", action="store_true",
-                        help="if --pif, show just the file name when find or exclude patterns are found")
+    parser.add_argument("-N", "--name", action="store_true",
+                        help="if --pif, show just the file name for find or exclude patterns")
 
     # Search options.
     search = parser.add_argument_group("search options")
@@ -173,8 +173,8 @@ def parse_arguments() -> None:
     search.add_argument("-y", "--yank", help="yank any pattern from lines", metavar="pattern", nargs="+")
     search.add_argument("-H", "--highlight", action="store_true", help="highlight matches in lines")
     search.add_argument("-i", "--ignore-case", action="store_true", help="ignore case when pattern matching")
-    count.add_argument("-c", "--count", action="store_true", help="show just the count for found matches")
-    count.add_argument("-S", "--sum", action="store_true", help="show just the sum for all found matches")
+    count.add_argument("-c", "--count", action="store_true", help="show just the count for find patterns")
+    count.add_argument("-S", "--sum", action="store_true", help="show just the sum for find patterns")
 
     # Parse the arguments.
     Globals.options = parser.parse_args()
@@ -238,8 +238,8 @@ def process_files(files) -> None:
                     process_lines(lines.readlines())
 
             if Globals.LINES_TO_PRINT:
-                # The "name_only" option is only when a find or exclude was provided.
-                if Globals.options.name_only and (Globals.options.find or Globals.options.exclude):
+                # The "--name" option is only when a find or exclude was provided.
+                if Globals.options.name and (Globals.options.find or Globals.options.exclude):
                     print(file)
                 else:
                     if not Globals.options.quiet:
