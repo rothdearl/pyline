@@ -163,10 +163,10 @@ pyline -h
 ```
 
 ```
-usage: pyline.py [-h] [-a] [-b] [-e] [-l] [-n | -o] [-q] [-s] [-t] [-v] [-w ^ $] [--change-tabs n] [--show-tabs] [--pif]
-                 [--iso] [--name-only] [-f pattern [pattern ...] | --find-all pattern [pattern ...]]
-                 [-x pattern [pattern ...] | --exclude-all pattern [pattern ...]] [-r pattern replace]
-                 [-y pattern [pattern ...]] [-H] [-i] [-c | -S] [files ...]
+usage: pyline [-h] [-a] [-b] [-e] [-l] [-n | -o] [-q] [-s] [-t] [-v] [-w ^ $] [--change-tabs n] [--show-tabs] [--pif]
+              [--iso] [--name-only] [-f pattern [pattern ...] | --find-all pattern [pattern ...]]
+              [-x pattern [pattern ...] | --exclude-all pattern [pattern ...]] [-r pattern replace] [-y pattern [pattern ...]]
+              [-H] [-i] [-c | -S] [files ...]
 
 utility for processing lines of input.
 
@@ -174,35 +174,35 @@ positional arguments:
   files                                 files to process lines from
 
 options:
-  -h, --help                            show this help message and exit
-  -a, --add-newline                     add a newline after processing
-  -b, --ignore-blank                    ignore blank lines
-  -e, --escape                          escape\ white\ space
-  -l, --trim-leading                    trim leading whitespace
-  -n, --line-numbers                    show line numbers
-  -o, --number-output                   number output lines
-  -q, --quiet                           no file name headers or error messages
-  -s, --squeeze-blank                   suppress repeated blank lines
-  -t, --trim-trailing                   trim trailing whitespace
-  -v, --version                         show program's version number and exit
-  -w ^ $, --wrap ^ $                    ^wrap lines between tokens$
-  --change-tabs n                       change tabs to 'n' spaces
-  --show-tabs                           show tabs as >··
-  --pif                                 treat piped input as file names
-  --iso                                 if --pif, use ISO-8859-1 for encoding instead of UTF-8
-  --name-only                           if --pif, show just the file name when find or exclude patterns are found
+  -h, --help                                show this help message and exit
+  -a, --add-newline                         add a newline after processing
+  -b, --ignore-blank                        ignore blank lines
+  -e, --escape                              escape\ white\ space
+  -l, --trim-leading                        trim leading whitespace
+  -n, --line-numbers                        show line numbers
+  -o, --number-output                       number output lines
+  -q, --quiet                               no file name headers or error messages
+  -s, --squeeze-blank                       suppress repeated blank lines
+  -t, --trim-trailing                       trim trailing whitespace
+  -v, --version                             show program's version number and exit
+  -w ^ $, --wrap ^ $                        ^wrap lines between tokens$
+  --change-tabs n                           change tabs to 'n' spaces
+  --show-tabs                               show tabs as >··
+  --pif                                     treat piped input as file names
+  --iso                                     if --pif, use ISO-8859-1 for encoding instead of UTF-8
+  -N, --name-only                           if --pif, show just the file name when find or exclude patterns are found
 
 search options:
-  -f, --find pattern [pattern ...]      find lines that contain any pattern
-  --find-all pattern [pattern ...]      find lines that contain all patterns
-  -x, --exclude pattern [pattern ...]   exclude lines that contain any pattern
-  --exclude-all pattern [pattern ...]   exclude lines that contain all patterns
-  -r, --replace pattern replace         replace any pattern
-  -y, --yank pattern [pattern ...]      yank any pattern from lines
-  -H, --highlight                       highlight matches in lines
-  -i, --ignore-case                     ignore case when pattern matching
-  -c, --count                           show just the count for found matches
-  -S, --sum                             show just the sum for all found matches
+  -f, --find pattern [pattern ...]          find lines that contain any pattern
+  -F, --find-all pattern [pattern ...]      find lines that contain all patterns
+  -x, --exclude pattern [pattern ...]       exclude lines that contain any pattern
+  -X, --exclude-all pattern [pattern ...]   exclude lines that contain all patterns
+  -r, --replace pattern replace             replace any pattern
+  -y, --yank pattern [pattern ...]          yank any pattern from lines
+  -H, --highlight                           highlight matches in lines
+  -i, --ignore-case                         ignore case when pattern matching
+  -c, --count                               show just the count for found matches
+  -S, --sum                                 show just the sum for all found matches
 
 files after a find, exclude or yank will be treated as patterns
 ```

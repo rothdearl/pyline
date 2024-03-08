@@ -155,7 +155,7 @@ def parse_arguments() -> None:
     parser.add_argument("--show-tabs", action="store_true", help=f"show tabs as {Globals.TAB}")
     parser.add_argument("--pif", action="store_true", help="treat piped input as file names")
     parser.add_argument("--iso", action="store_true", help="if --pif, use ISO-8859-1 for encoding instead of UTF-8")
-    parser.add_argument("--name-only", action="store_true",
+    parser.add_argument("-N", "--name-only", action="store_true",
                         help="if --pif, show just the file name when find or exclude patterns are found")
 
     # Search options.
@@ -165,9 +165,10 @@ def parse_arguments() -> None:
     count = search.add_mutually_exclusive_group()
 
     find.add_argument("-f", "--find", help="find lines that contain any pattern", metavar="pattern", nargs="+")
-    find.add_argument("--find-all", help="find lines that contain all patterns", metavar="pattern", nargs="+")
+    find.add_argument("-F", "--find-all", help="find lines that contain all patterns", metavar="pattern", nargs="+")
     exclude.add_argument("-x", "--exclude", help="exclude lines that contain any pattern", metavar="pattern", nargs="+")
-    exclude.add_argument("--exclude-all", help="exclude lines that contain all patterns", metavar="pattern", nargs="+")
+    exclude.add_argument("-X", "--exclude-all", help="exclude lines that contain all patterns", metavar="pattern",
+                         nargs="+")
     search.add_argument("-r", "--replace", help="replace any pattern", metavar=("pattern", "replace"), nargs=2)
     search.add_argument("-y", "--yank", help="yank any pattern from lines", metavar="pattern", nargs="+")
     search.add_argument("-H", "--highlight", action="store_true", help="highlight matches in lines")
@@ -264,7 +265,7 @@ def process_line_with_options(line: str, line_number: int) -> bool:
     if Globals.options.find_all:
         can_print = line_has_find_matches(Globals.options.find_all, line)
 
-        # Option: --count and --sum
+        # Option: --count or --sum
         if can_print and (Globals.options.count or Globals.options.sum):
             count = count_matches(Globals.options.find_all, line)
             Globals.count_matches_sum += count
@@ -274,7 +275,7 @@ def process_line_with_options(line: str, line_number: int) -> bool:
     if can_print and Globals.options.find:
         can_print = line_has_find_match(Globals.options.find, line)
 
-        # Option: --count and --sum
+        # Option: --count or --sum
         if can_print and (Globals.options.count or Globals.options.sum):
             count = count_matches(Globals.options.find, line)
             Globals.count_matches_sum += count
@@ -288,7 +289,7 @@ def process_line_with_options(line: str, line_number: int) -> bool:
     if can_print and Globals.options.exclude:
         can_print = not line_has_find_match(Globals.options.exclude, line)
 
-    # Option: --ignore-blank and --squeeze-blank
+    # Option: --ignore-blank or --squeeze-blank
     if can_print and not line:
         Globals.repeated_blank_lines += 1
 
@@ -327,7 +328,7 @@ def process_line_with_options(line: str, line_number: int) -> bool:
         if Globals.options.escape:
             line = line.replace(" ", "\\ ")
 
-        # Option: --trim-leading and --trim-trailing
+        # Option: --trim-leading or --trim-trailing
         line = trim_line(line)
 
         # Option: --wrap
@@ -338,7 +339,7 @@ def process_line_with_options(line: str, line_number: int) -> bool:
             wrap_first = Globals.options.wrap[0]
             wrap_last = Globals.options.wrap[1]
 
-        # Option: --line-numbers and --number-output
+        # Option: --line-numbers or --number-output
         if Globals.options.line_numbers or Globals.options.number_output:
             if Globals.STDOUT_IS_PIPE:
                 Globals.LINES_TO_PRINT.append(f"{line_number:>4}: {wrap_first}{line}{wrap_last}")
