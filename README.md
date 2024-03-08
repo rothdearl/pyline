@@ -1,6 +1,6 @@
 ## pyline: A Python line processor
 
-**Version:** 1.9.4
+**Version:** 1.10.0
 
 ### Overview
 
@@ -164,9 +164,9 @@ pyline -h
 
 ```
 usage: pyline.py [-h] [-a] [-b] [-e] [-l] [-n | -o] [-q] [-s] [-t] [-v] [-w ^ $] [--change-tabs n] [--show-tabs] [--pif]
-                 [--iso] [--name-only] [-f pattern [pattern ...]] [--find-all pattern [pattern ...]]
-                 [-x pattern [pattern ...]] [--exclude-all pattern [pattern ...]] [-r pattern replace]
-                 [-y pattern [pattern ...]] [--highlight] [-i] [files ...]
+                 [--iso] [--name-only] [-f pattern [pattern ...] | --find-all pattern [pattern ...]]
+                 [-x pattern [pattern ...] | --exclude-all pattern [pattern ...]] [-r pattern replace]
+                 [-y pattern [pattern ...]] [-H] [-i] [-c | -S] [files ...]
 
 utility for processing lines of input.
 
@@ -190,7 +190,7 @@ options:
   --show-tabs                           show tabs as >··
   --pif                                 treat piped input as file names
   --iso                                 if --pif, use ISO-8859-1 for encoding instead of UTF-8
-  --name-only                           if --pif, display just the file name when find or exclude patterns are found
+  --name-only                           if --pif, show just the file name when find or exclude patterns are found
 
 search options:
   -f, --find pattern [pattern ...]      find lines that contain any pattern
@@ -199,8 +199,10 @@ search options:
   --exclude-all pattern [pattern ...]   exclude lines that contain all patterns
   -r, --replace pattern replace         replace any pattern
   -y, --yank pattern [pattern ...]      yank any pattern from lines
-  --highlight                           highlight matches in lines
+  -H, --highlight                       highlight matches in lines
   -i, --ignore-case                     ignore case when pattern matching
+  -c, --count                           show just the count for found matches
+  -S, --sum                             show just the sum for all found matches
 
 files after a find, exclude or yank will be treated as patterns
 ```

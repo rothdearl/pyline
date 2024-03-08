@@ -17,13 +17,31 @@ class Globals:
     COLOR_LINE_NUMBER: Final[str] = "\033[0;93m"  # High intensity yellow
     COLOR_MATCH: Final[str] = "\033[0;91m"  # High intensity red
     COLOR_RESET: Final[str] = "\033[0m"
+    count_matches_sum: int
     LINES_TO_PRINT: Final[List[str]] = []
     options: argparse.Namespace
     repeated_blank_lines: int
     STDIN_IS_PIPE: Final[bool] = not os.isatty(sys.stdin.fileno())
     STDOUT_IS_PIPE: Final[bool] = not os.isatty(sys.stdout.fileno())
     TAB: Final[str] = ">··"
-    VERSION: Final[str] = "1.9.4"
+    VERSION: Final[str] = "1.10.0"
+
+
+def count_matches(patterns: List[str], line: str) -> int:
+    """
+    Returns the number of times the patterns are found in the line.
+    :param patterns: The patterns.
+    :param line: The line.
+    :return: The number of times the patterns are found in the line.
+    """
+    flags = re.IGNORECASE if Globals.options.ignore_case else 0
+    count = 0
+
+    for pattern in patterns:
+        if matches := re.findall(pattern, line, flags=flags):
+            count += len(matches)
+
+    return count
 
 
 def highlight_matches(patterns: List[str], line: str) -> str:
@@ -120,7 +138,6 @@ def parse_arguments() -> None:
     parser = argparse.ArgumentParser(allow_abbrev=False, description="utility for processing lines of input.",
                                      epilog="files after a find, exclude or yank will be treated as patterns")
     line_numbers = parser.add_mutually_exclusive_group()
-    search = parser.add_argument_group("search options")
 
     parser.add_argument("files", help="files to process lines from", metavar="files", nargs="*")
     parser.add_argument("-a", "--add-newline", action="store_true", help="add a newline after processing")
@@ -139,17 +156,24 @@ def parse_arguments() -> None:
     parser.add_argument("--pif", action="store_true", help="treat piped input as file names")
     parser.add_argument("--iso", action="store_true", help="if --pif, use ISO-8859-1 for encoding instead of UTF-8")
     parser.add_argument("--name-only", action="store_true",
-                        help="if --pif, display just the file name when find or exclude patterns are found")
+                        help="if --pif, show just the file name when find or exclude patterns are found")
 
     # Search options.
-    search.add_argument("-f", "--find", help="find lines that contain any pattern", metavar="pattern", nargs="+")
-    search.add_argument("--find-all", help="find lines that contain all patterns", metavar="pattern", nargs="+")
-    search.add_argument("-x", "--exclude", help="exclude lines that contain any pattern", metavar="pattern", nargs="+")
-    search.add_argument("--exclude-all", help="exclude lines that contain all patterns", metavar="pattern", nargs="+")
+    search = parser.add_argument_group("search options")
+    find = search.add_mutually_exclusive_group()
+    exclude = search.add_mutually_exclusive_group()
+    count = search.add_mutually_exclusive_group()
+
+    find.add_argument("-f", "--find", help="find lines that contain any pattern", metavar="pattern", nargs="+")
+    find.add_argument("--find-all", help="find lines that contain all patterns", metavar="pattern", nargs="+")
+    exclude.add_argument("-x", "--exclude", help="exclude lines that contain any pattern", metavar="pattern", nargs="+")
+    exclude.add_argument("--exclude-all", help="exclude lines that contain all patterns", metavar="pattern", nargs="+")
     search.add_argument("-r", "--replace", help="replace any pattern", metavar=("pattern", "replace"), nargs=2)
     search.add_argument("-y", "--yank", help="yank any pattern from lines", metavar="pattern", nargs="+")
-    search.add_argument("--highlight", action="store_true", help="highlight matches in lines")
+    search.add_argument("-H", "--highlight", action="store_true", help="highlight matches in lines")
     search.add_argument("-i", "--ignore-case", action="store_true", help="ignore case when pattern matching")
+    count.add_argument("-c", "--count", action="store_true", help="show just the count for found matches")
+    count.add_argument("-S", "--sum", action="store_true", help="show just the sum for all found matches")
 
     # Parse the arguments.
     Globals.options = parser.parse_args()
@@ -187,8 +211,11 @@ def print_lines() -> None:
     Prints the lines.
     :return: None
     """
-    for line in Globals.LINES_TO_PRINT:
-        print(line)
+    if Globals.options.sum:
+        print(Globals.count_matches_sum)
+    else:
+        for line in Globals.LINES_TO_PRINT:
+            print(line)
 
 
 def process_files(files) -> None:
@@ -237,16 +264,28 @@ def process_line_with_options(line: str, line_number: int) -> bool:
     if Globals.options.find_all:
         can_print = line_has_find_matches(Globals.options.find_all, line)
 
+        # Option: --count and --sum
+        if can_print and (Globals.options.count or Globals.options.sum):
+            count = count_matches(Globals.options.find_all, line)
+            Globals.count_matches_sum += count
+            line = str(count)
+
     # Option: --find
-    if can_print and not Globals.options.find_all and Globals.options.find:
+    if can_print and Globals.options.find:
         can_print = line_has_find_match(Globals.options.find, line)
+
+        # Option: --count and --sum
+        if can_print and (Globals.options.count or Globals.options.sum):
+            count = count_matches(Globals.options.find, line)
+            Globals.count_matches_sum += count
+            line = str(count)
 
     # Option: --exclude-all
     if can_print and Globals.options.exclude_all:
         can_print = not line_has_find_match(Globals.options.exclude_all, line)
 
     # Option: --exclude
-    if can_print and not Globals.options.exclude_all and Globals.options.exclude:
+    if can_print and Globals.options.exclude:
         can_print = not line_has_find_match(Globals.options.exclude, line)
 
     # Option: --ignore-blank and --squeeze-blank
@@ -322,6 +361,7 @@ def process_lines(lines) -> None:
     line_number = 1
 
     # Clear any previous line processing.
+    Globals.count_matches_sum = 0
     Globals.LINES_TO_PRINT.clear()
     Globals.repeated_blank_lines = 0
 
