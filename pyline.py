@@ -5,7 +5,7 @@ import argparse
 import os
 import re
 import sys
-from typing import final, Final, List
+from typing import Final, List, final
 
 
 @final
@@ -66,7 +66,7 @@ def line_has_find_match(patterns: List[str], line: str) -> bool:
     Returns True if any of the find patterns are found in the line.
     :param patterns: The patterns.
     :param line: The line to check.
-    :return: True or False.
+    :return: True or false.
     """
     has_match = False
     flags = re.IGNORECASE if Globals.options.ignore_case else 0
@@ -88,7 +88,7 @@ def line_has_find_matches(patterns: List[str], line: str) -> bool:
     Returns True if all the find patterns are found in the line.
     :param patterns: The patterns.
     :param line: The line to check.
-    :return: True or False.
+    :return: True or false.
     """
     has_match = True
     flags = re.IGNORECASE if Globals.options.ignore_case else 0
@@ -132,7 +132,7 @@ def main() -> None:
 def parse_arguments() -> None:
     """
     Parses the command line arguments to get the program options.
-    :return: None.
+    :return: None
     """
     # Build the argument parser.
     parser = argparse.ArgumentParser(allow_abbrev=False, description="utility for processing lines of input.",
