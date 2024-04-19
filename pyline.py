@@ -134,7 +134,6 @@ def parse_arguments() -> None:
     Parses the command line arguments to get the program options.
     :return: None
     """
-    # Build the argument parser.
     parser = argparse.ArgumentParser(allow_abbrev=False, description="utility for processing lines of input.",
                                      epilog="files after a find, exclude or yank will be treated as patterns")
     line_numbers = parser.add_mutually_exclusive_group()
