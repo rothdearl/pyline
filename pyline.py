@@ -7,6 +7,8 @@ import re
 import sys
 from typing import Final, List, final
 
+from colorama import just_fix_windows_console
+
 
 @final
 class Globals:
@@ -24,7 +26,7 @@ class Globals:
     STDIN_IS_PIPE: Final[bool] = not os.isatty(sys.stdin.fileno())
     STDOUT_IS_PIPE: Final[bool] = not os.isatty(sys.stdout.fileno())
     TAB: Final[str] = ">··"
-    VERSION: Final[str] = "1.10.0"
+    VERSION: Final[str] = "1.10.1"
 
 
 def count_matches(patterns: List[str], line: str) -> int:
@@ -110,6 +112,9 @@ def main() -> None:
     A program to process lines of input.
     :return: None
     """
+    # Fix ANSI escape sequences on Windows.
+    just_fix_windows_console()
+
     parse_arguments()
 
     try:
