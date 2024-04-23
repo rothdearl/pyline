@@ -5,6 +5,7 @@ import argparse
 import os
 import re
 import sys
+from signal import SIG_DFL, SIGPIPE, signal
 from typing import Final, List, final
 
 from colorama import just_fix_windows_console
@@ -26,7 +27,7 @@ class Globals:
     STDIN_IS_PIPE: Final[bool] = not os.isatty(sys.stdin.fileno())
     STDOUT_IS_PIPE: Final[bool] = not os.isatty(sys.stdout.fileno())
     TAB: Final[str] = ">··"
-    VERSION: Final[str] = "1.10.1"
+    VERSION: Final[str] = "1.10.2"
 
 
 def count_matches(patterns: List[str], line: str) -> int:
@@ -117,21 +118,18 @@ def main() -> None:
 
     parse_arguments()
 
-    try:
-        # If the input is from a pipe, process from stdin. Otherwise, process files from the command line.
-        if Globals.STDIN_IS_PIPE:
-            if Globals.options.pif:  # Option: --pif
-                process_files(sys.stdin)
-            else:
-                process_lines(sys.stdin)
-                print_lines()
+    # If the input is from a pipe, process from stdin. Otherwise, process files from the command line.
+    if Globals.STDIN_IS_PIPE:
+        if Globals.options.pif:  # Option: --pif
+            process_files(sys.stdin)
+        else:
+            process_lines(sys.stdin)
+            print_lines()
 
-            if Globals.options.files:  # Process any additional file parameters.
-                process_files(Globals.options.files)
-        elif Globals.options.files:
+        if Globals.options.files:  # Process any additional file parameters.
             process_files(Globals.options.files)
-    except KeyboardInterrupt:
-        pass  # Process interrupted; exit quietly.
+    elif Globals.options.files:
+        process_files(Globals.options.files)
 
 
 def parse_arguments() -> None:
@@ -429,4 +427,10 @@ def trim_line(line: str) -> str:
 
 
 if __name__ == "__main__":
-    main()
+    # Prevent the broken pipe error.
+    signal(SIGPIPE, SIG_DFL)
+
+    try:
+        main()
+    except KeyboardInterrupt:
+        pass  # Process interrupted; exit quietly.
