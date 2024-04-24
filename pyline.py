@@ -14,6 +14,7 @@ class Globals:
     Class for managing global constants and instances across the entire application.
     """
     COLOR_FILE_NAME: Final[str] = "\033[0;36m"  # Cyan
+    COLOR_FILE_NAME_BRACKET: Final[str] = "\033[0;36m"  # Bold
     COLOR_LINE_NUMBER: Final[str] = "\033[0;93m"  # High intensity yellow
     COLOR_MATCH: Final[str] = "\033[0;91m"  # High intensity red
     COLOR_RESET: Final[str] = "\033[0m"
@@ -131,7 +132,7 @@ def parse_arguments() -> None:
     Parses the command line arguments to get the program options.
     :return: None
     """
-    parser = argparse.ArgumentParser(allow_abbrev=False, description="utility for processing lines of input.",
+    parser = argparse.ArgumentParser(allow_abbrev=False, description="utility for processing lines of input",
                                      epilog="files after a find, exclude or yank will be treated as patterns")
     line_numbers = parser.add_mutually_exclusive_group()
 
@@ -197,8 +198,8 @@ def print_file_name(file_name: str) -> None:
     if Globals.STDOUT_IS_PIPE:
         print(f"[{file_name}]")
     else:
-        left_bracket = f"\033[1m[{Globals.COLOR_RESET}"  # Bold
-        right_bracket = f"\033[1m]{Globals.COLOR_RESET}"  # Bold
+        left_bracket = f"{Globals.COLOR_FILE_NAME_BRACKET}[{Globals.COLOR_RESET}"
+        right_bracket = f"{Globals.COLOR_FILE_NAME_BRACKET}]{Globals.COLOR_RESET}"
 
         print(f"{left_bracket}{Globals.COLOR_FILE_NAME}{file_name}{Globals.COLOR_RESET}{right_bracket}")
 
