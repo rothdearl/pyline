@@ -66,7 +66,7 @@ def highlight_matches(patterns: List[str], line: str) -> str:
 
 def line_has_find_match(patterns: List[str], line: str) -> bool:
     """
-    Returns True if any of the find patterns are found in the line.
+    Returns true if any of the find patterns are found in the line.
     :param patterns: The patterns.
     :param line: The line to check.
     :return: True or false.
@@ -88,7 +88,7 @@ def line_has_find_match(patterns: List[str], line: str) -> bool:
 
 def line_has_find_matches(patterns: List[str], line: str) -> bool:
     """
-    Returns True if all the find patterns are found in the line.
+    Returns true if all the find patterns are found in the line.
     :param patterns: The patterns.
     :param line: The line to check.
     :return: True or false.
