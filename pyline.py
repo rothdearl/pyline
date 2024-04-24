@@ -427,7 +427,7 @@ def trim_line(line: str) -> str:
 
 
 if __name__ == "__main__":
-    # Prevent the broken pipe error.
+    # Prevent a broken pipe error.
     signal(SIGPIPE, SIG_DFL)
 
     try:
