@@ -5,10 +5,7 @@ import argparse
 import os
 import re
 import sys
-from signal import SIG_DFL, SIGPIPE, signal
 from typing import Final, List, final
-
-from colorama import just_fix_windows_console
 
 
 @final
@@ -113,9 +110,6 @@ def main() -> None:
     A program to process lines of input.
     :return: None
     """
-    # Fix ANSI escape sequences on Windows.
-    just_fix_windows_console()
-
     parse_arguments()
 
     # If the input is from a pipe, process from stdin. Otherwise, process files from the command line.
@@ -427,10 +421,19 @@ def trim_line(line: str) -> str:
 
 
 if __name__ == "__main__":
-    # Prevent a broken pipe error.
-    signal(SIGPIPE, SIG_DFL)
-
     try:
+        # Fix ANSI escape sequences on Windows.
+        if os.name == 'nt':
+            from colorama import just_fix_windows_console
+
+            just_fix_windows_console()
+
+        # Prevent a broken pipe error (not supported on Windows).
+        if os.name != 'nt':
+            from signal import SIG_DFL, SIGPIPE, signal
+
+            signal(SIGPIPE, SIG_DFL)
+
         main()
     except KeyboardInterrupt:
         pass  # Process interrupted; exit quietly.
