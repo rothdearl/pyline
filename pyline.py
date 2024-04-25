@@ -35,8 +35,8 @@ def count_matches(patterns: List[str], line: str) -> int:
     :param line: The line.
     :return: The number of times the patterns are found in the line.
     """
-    flags = re.IGNORECASE if Globals.options.ignore_case else 0
     count = 0
+    flags = re.IGNORECASE if Globals.options.ignore_case else 0
 
     for pattern in patterns:
         if matches := re.findall(pattern, line, flags=flags):
@@ -69,8 +69,8 @@ def line_has_find_match(patterns: List[str], line: str) -> bool:
     :param line: The line to check.
     :return: True or false.
     """
-    has_match = False
     flags = re.IGNORECASE if Globals.options.ignore_case else 0
+    has_match = False
     pattern = None
 
     try:
@@ -91,8 +91,8 @@ def line_has_find_matches(patterns: List[str], line: str) -> bool:
     :param line: The line to check.
     :return: True or false.
     """
-    has_match = True
     flags = re.IGNORECASE if Globals.options.ignore_case else 0
+    has_match = True
     pattern = None
 
     try:
