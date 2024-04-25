@@ -14,7 +14,7 @@ class Globals:
     Class for managing global constants and instances across the entire application.
     """
     COLOR_FILE_NAME: Final[str] = "\033[0;36m"  # Cyan
-    COLOR_FILE_NAME_BRACKET: Final[str] = "\033[0;36m"  # Bold
+    COLOR_FILE_NAME_BRACKET: Final[str] = "\033[1m"  # Bold
     COLOR_LINE_NUMBER: Final[str] = "\033[0;93m"  # High intensity yellow
     COLOR_MATCH: Final[str] = "\033[0;91m"  # High intensity red
     COLOR_RESET: Final[str] = "\033[0m"
@@ -246,7 +246,7 @@ def process_files(files) -> None:
         except FileNotFoundError:
             print_error_message(f"no such file or directory: {file}")
         except UnicodeDecodeError:
-            print(f"unable to decode file: {file}")
+            print_error_message(f"unable to decode file: {file}")
 
 
 def process_line_with_options(line: str, line_number: int) -> bool:
