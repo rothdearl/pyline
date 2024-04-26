@@ -13,10 +13,10 @@ class Globals:
     """
     Class for managing global constants and instances across the entire application.
     """
-    COLOR_FILE_NAME: Final[str] = "\033[0;36m"  # Cyan
+    COLOR_FILE_NAME: Final[str] = "\033[0;96m"  # High intensity cyan
     COLOR_FILE_NAME_BRACKET: Final[str] = "\033[1m"  # Bold
     COLOR_LINE_NUMBER: Final[str] = "\033[0;93m"  # High intensity yellow
-    COLOR_MATCH: Final[str] = "\033[0;91m"  # High intensity red
+    COLOR_MATCH: Final[str] = "\033[0;35m"  # Purple
     COLOR_RESET: Final[str] = "\033[0m"
     count_matches_sum: int
     LINES_TO_PRINT: Final[List[str]] = []
@@ -25,7 +25,7 @@ class Globals:
     STDIN_IS_PIPE: Final[bool] = not os.isatty(sys.stdin.fileno())
     STDOUT_IS_PIPE: Final[bool] = not os.isatty(sys.stdout.fileno())
     TAB: Final[str] = ">··"
-    VERSION: Final[str] = "1.10.2"
+    VERSION: Final[str] = "1.10.3"
 
 
 def count_matches(patterns: List[str], line: str) -> int:
@@ -125,6 +125,8 @@ def main() -> None:
             process_files(Globals.options.files)
     elif Globals.options.files:
         process_files(Globals.options.files)
+    else:
+        print_error_message("no input files")
 
 
 def parse_arguments() -> None:
