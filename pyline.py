@@ -14,7 +14,6 @@ class Globals:
     Class for managing global constants and instances across the entire application.
     """
     COLOR_FILE_NAME: Final[str] = "\033[0;96m"  # High intensity cyan
-    COLOR_FILE_NAME_BRACKET: Final[str] = "\033[1m"  # Bold
     COLOR_LINE_NUMBER: Final[str] = "\033[0;93m"  # High intensity yellow
     COLOR_MATCH: Final[str] = "\033[0;91m"  # High intensity red
     COLOR_RESET: Final[str] = "\033[0m"
@@ -200,10 +199,12 @@ def print_file_name(file_name: str) -> None:
     if Globals.STDOUT_IS_PIPE:
         print(f"[{file_name}]")
     else:
-        left_bracket = f"{Globals.COLOR_FILE_NAME_BRACKET}[{Globals.COLOR_RESET}"
-        right_bracket = f"{Globals.COLOR_FILE_NAME_BRACKET}]{Globals.COLOR_RESET}"
+        bold = "\033[1m"
+        italics = "\u001b[3m"
+        left_bracket = f"{bold}[{Globals.COLOR_RESET}"
+        right_bracket = f"{bold}]{Globals.COLOR_RESET}"
 
-        print(f"{left_bracket}{Globals.COLOR_FILE_NAME}{file_name}{Globals.COLOR_RESET}{right_bracket}")
+        print(f"{left_bracket}{Globals.COLOR_FILE_NAME}{italics}{file_name}{Globals.COLOR_RESET}{right_bracket}")
 
 
 def print_lines() -> None:
