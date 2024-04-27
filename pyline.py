@@ -16,7 +16,7 @@ class Globals:
     COLOR_FILE_NAME: Final[str] = "\033[0;96m"  # High intensity cyan
     COLOR_FILE_NAME_BRACKET: Final[str] = "\033[1m"  # Bold
     COLOR_LINE_NUMBER: Final[str] = "\033[0;93m"  # High intensity yellow
-    COLOR_MATCH: Final[str] = "\033[0;35m"  # Purple
+    COLOR_MATCH: Final[str] = "\033[0;91m"  # High intensity red
     COLOR_RESET: Final[str] = "\033[0m"
     count_matches_sum: int
     LINES_TO_PRINT: Final[List[str]] = []
