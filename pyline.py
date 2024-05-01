@@ -5,7 +5,7 @@ import argparse
 import os
 import re
 import sys
-from typing import Final, List, final
+from typing import Final, final
 
 
 @final
@@ -18,7 +18,7 @@ class Globals:
     COLOR_MATCH: Final[str] = "\033[0;91m"  # High intensity red
     COLOR_RESET: Final[str] = "\033[0m"
     count_matches_sum: int
-    LINES_TO_PRINT: Final[List[str]] = []
+    LINES_TO_PRINT: Final[list[str]] = []
     options: argparse.Namespace
     repeated_blank_lines: int
     STDIN_IS_PIPE: Final[bool] = not os.isatty(sys.stdin.fileno())
@@ -27,7 +27,7 @@ class Globals:
     VERSION: Final[str] = "1.10.3"
 
 
-def count_matches(patterns: List[str], line: str) -> int:
+def count_matches(patterns: list[str], line: str) -> int:
     """
     Returns the number of times the patterns are found in the line.
     :param patterns: The patterns.
@@ -44,7 +44,7 @@ def count_matches(patterns: List[str], line: str) -> int:
     return count
 
 
-def highlight_matches(patterns: List[str], line: str) -> str:
+def highlight_matches(patterns: list[str], line: str) -> str:
     """
     Highlights all patterns in the line.
     :param patterns: The patterns.
@@ -61,7 +61,7 @@ def highlight_matches(patterns: List[str], line: str) -> str:
     return line
 
 
-def line_has_find_match(patterns: List[str], line: str) -> bool:
+def line_has_find_match(patterns: list[str], line: str) -> bool:
     """
     Returns true if any of the find patterns are found in the line.
     :param patterns: The patterns.
@@ -83,7 +83,7 @@ def line_has_find_match(patterns: List[str], line: str) -> bool:
     return has_match
 
 
-def line_has_find_matches(patterns: List[str], line: str) -> bool:
+def line_has_find_matches(patterns: list[str], line: str) -> bool:
     """
     Returns true if all the find patterns are found in the line.
     :param patterns: The patterns.
@@ -387,7 +387,7 @@ def remove_newline(string: str) -> str:
     return string[:-1] if string[-1] == "\n" else string
 
 
-def replace_from_line(patterns: List[str], replacement: str, line: str) -> str:
+def replace_from_line(patterns: list[str], replacement: str, line: str) -> str:
     """
     Replaces patterns from the line.
     :param patterns: The patterns to replace.
