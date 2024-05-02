@@ -24,7 +24,7 @@ class Globals:
     STDIN_IS_PIPE: Final[bool] = not os.isatty(sys.stdin.fileno())
     STDOUT_IS_PIPE: Final[bool] = not os.isatty(sys.stdout.fileno())
     TAB: Final[str] = ">··"
-    VERSION: Final[str] = "1.10.3"
+    VERSION: Final[str] = "1.10.4"
 
 
 def count_matches(patterns: list[str], line: str) -> int:
@@ -125,7 +125,7 @@ def main() -> None:
     elif Globals.options.files:
         process_files(Globals.options.files)
     else:
-        print_error_message("no input files")
+        print_error_message("no input files", stop_processing=False)
 
 
 def parse_arguments() -> None:
@@ -178,16 +178,21 @@ def parse_arguments() -> None:
     Globals.options = parser.parse_args()
 
 
-def print_error_message(message: str) -> None:
+def print_error_message(message: str, *, stop_processing: bool = True) -> None:
     """
-    Prints an error message and stops processing.
+    Prints an error message.
     :param message: The message to print.
+    :param stop_processing: Whether to stop processing; default is true.
     :return: None
     """
     if not Globals.options.quiet:
-        print(f"error: {message}", file=sys.stderr)
+        if Globals.STDOUT_IS_PIPE:
+            print(f"error: {message}", file=sys.stderr)
+        else:
+            print(f"{Globals.COLOR_MATCH}error{Globals.COLOR_RESET}: {message}", file=sys.stderr)
 
-    raise SystemExit()  # Stop processing.
+    if stop_processing:
+        raise SystemExit()
 
 
 def print_file_name(file_name: str) -> None:
@@ -247,9 +252,9 @@ def process_files(files) -> None:
 
                     print_lines()
         except FileNotFoundError:
-            print_error_message(f"no such file or directory: {file}")
+            print_error_message(f"no such file or directory: {file}", stop_processing=False)
         except UnicodeDecodeError:
-            print_error_message(f"unable to decode file: {file}")
+            print_error_message(f"unable to decode file: {file}", stop_processing=False)
 
 
 def process_line_with_options(line: str, line_number: int) -> bool:
