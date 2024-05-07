@@ -23,8 +23,8 @@ class Globals:
     repeated_blank_lines: int
     STDIN_IS_PIPE: Final[bool] = not os.isatty(sys.stdin.fileno())
     STDOUT_IS_PIPE: Final[bool] = not os.isatty(sys.stdout.fileno())
-    TAB: Final[str] = ">··"
-    VERSION: Final[str] = "1.10.4"
+    TAB: Final[str] = "➡"
+    VERSION: Final[str] = "1.10.5"
 
 
 def count_matches(patterns: list[str], line: str) -> int:
@@ -204,12 +204,9 @@ def print_file_name(file_name: str) -> None:
     if Globals.STDOUT_IS_PIPE:
         print(f"[{file_name}]")
     else:
-        bold = "\033[1m"
         italics = "\u001b[3m"
-        left_bracket = f"{bold}[{Globals.COLOR_RESET}"
-        right_bracket = f"{bold}]{Globals.COLOR_RESET}"
 
-        print(f"{left_bracket}{Globals.COLOR_FILE_NAME}{italics}{file_name}{Globals.COLOR_RESET}{right_bracket}")
+        print(f"📁 {Globals.COLOR_FILE_NAME}{italics}{file_name}{Globals.COLOR_RESET}")
 
 
 def print_lines() -> None:
@@ -327,7 +324,7 @@ def process_line_with_options(line: str, line_number: int) -> bool:
 
         # Option: --show-tabs
         if Globals.options.show_tabs:
-            line = line.replace("\t", f"{Globals.TAB}")
+            line = line.replace("\t", f"{Globals.TAB:2}")
 
         # Option: --escape
         if Globals.options.escape:
