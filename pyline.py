@@ -20,10 +20,11 @@ class Globals:
     count_matches_sum: int
     LINES_TO_PRINT: Final[list[str]] = []
     options: argparse.Namespace
+    OS_IS_WINDOWS: Final[bool] = os.name == 'nt'
     repeated_blank_lines: int
     STDIN_IS_PIPE: Final[bool] = not os.isatty(sys.stdin.fileno())
     STDOUT_IS_PIPE: Final[bool] = not os.isatty(sys.stdout.fileno())
-    TAB: Final[str] = "➡"
+    TAB: Final[str] = ">··" if OS_IS_WINDOWS else "➡"
     VERSION: Final[str] = "1.10.5"
 
 
@@ -206,7 +207,14 @@ def print_file_name(file_name: str) -> None:
     else:
         italics = "\u001b[3m"
 
-        print(f"📁 {Globals.COLOR_FILE_NAME}{italics}{file_name}{Globals.COLOR_RESET}")
+        if Globals.OS_IS_WINDOWS:
+            bold = "\033[1m"
+            left_bracket = f"{bold}[{Globals.COLOR_RESET}"
+            right_bracket = f"{bold}]{Globals.COLOR_RESET}"
+
+            print(f"{left_bracket}{Globals.COLOR_FILE_NAME}{italics}{file_name}{Globals.COLOR_RESET}{right_bracket}")
+        else:
+            print(f"📁 {Globals.COLOR_FILE_NAME}{italics}{file_name}{Globals.COLOR_RESET}")
 
 
 def print_lines() -> None:
@@ -324,7 +332,7 @@ def process_line_with_options(line: str, line_number: int) -> bool:
 
         # Option: --show-tabs
         if Globals.options.show_tabs:
-            line = line.replace("\t", f"{Globals.TAB:2}")
+            line = line.replace("\t", f"{Globals.TAB:3}")
 
         # Option: --escape
         if Globals.options.escape:
@@ -429,13 +437,13 @@ def trim_line(line: str) -> str:
 if __name__ == "__main__":
     try:
         # Fix ANSI escape sequences on Windows.
-        if os.name == 'nt':
+        if Globals.OS_IS_WINDOWS:
             from colorama import just_fix_windows_console
 
             just_fix_windows_console()
 
         # Prevent a broken pipe error (not supported on Windows).
-        if os.name != 'nt':
+        if not Globals.OS_IS_WINDOWS:
             from signal import SIG_DFL, SIGPIPE, signal
 
             signal(SIGPIPE, SIG_DFL)
