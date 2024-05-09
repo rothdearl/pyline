@@ -214,7 +214,9 @@ def print_file_name(file_name: str) -> None:
 
             print(f"{left_bracket}{Globals.COLOR_FILE_NAME}{italics}{file_name}{Globals.COLOR_RESET}{right_bracket}")
         else:
-            print(f"📁 {Globals.COLOR_FILE_NAME}{italics}{file_name}{Globals.COLOR_RESET}")
+            emoji = "📁" if os.path.isdir(file_name) else "📄"
+
+            print(f"{emoji:2}{Globals.COLOR_FILE_NAME}{italics}{file_name}{Globals.COLOR_RESET}")
 
 
 def print_lines() -> None:
@@ -332,7 +334,7 @@ def process_line_with_options(line: str, line_number: int) -> bool:
 
         # Option: --show-tabs
         if Globals.options.show_tabs:
-            line = line.replace("\t", f"{Globals.TAB:3}")
+            line = line.replace("\t", f"{Globals.TAB:2}")
 
         # Option: --escape
         if Globals.options.escape:
