@@ -1,6 +1,6 @@
 ## pyline: A Python line processor
 
-**Version:** 1.10.0
+**Version:** 1.10.6
 
 ### Overview
 
