@@ -17,15 +17,15 @@ class Globals:
     COLOR_LINE_NUMBER: Final[str] = "\033[0;93m"  # High intensity yellow
     COLOR_MATCH: Final[str] = "\033[0;91m"  # High intensity red
     COLOR_RESET: Final[str] = "\033[0m"
-    count_matches_sum: int
     LINES_TO_PRINT: Final[list[str]] = []
-    options: argparse.Namespace
     OS_IS_WINDOWS: Final[bool] = os.name == 'nt'
-    repeated_blank_lines: int
     STDIN_IS_PIPE: Final[bool] = not os.isatty(sys.stdin.fileno())
     STDOUT_IS_PIPE: Final[bool] = not os.isatty(sys.stdout.fileno())
     TAB: Final[str] = ">··" if OS_IS_WINDOWS else "➡"
     VERSION: Final[str] = "1.10.6"
+    count_matches_sum: int
+    options: argparse.Namespace
+    repeated_blank_lines: int
 
 
 def count_matches(patterns: list[str], line: str) -> int:
