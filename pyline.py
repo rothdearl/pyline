@@ -153,7 +153,7 @@ def parse_arguments() -> None:
     parser.add_argument("--change-tabs", help="change tabs to 'n' spaces", metavar='n', type=int)
     parser.add_argument("-T", "--show-tabs", action="store_true", help=f"show tabs as {Globals.TAB}")
     parser.add_argument("--pif", action="store_true", help="treat piped input as file names")
-    parser.add_argument("--iso", action="store_true", help="if --pif, use ISO-8859-1 for encoding instead of UTF-8")
+    parser.add_argument("--iso", action="store_true", help="if --pif, use iso-8859-1 for encoding instead of utf-8")
     parser.add_argument("-N", "--name", action="store_true",
                         help="if --pif, show just the file name for find or exclude patterns")
 
@@ -237,7 +237,7 @@ def process_files(files) -> None:
     :param files: The files to process lines from.
     :return: None
     """
-    encoding = "ISO-8859-1" if Globals.options.iso else "UTF-8"
+    encoding = "iso-8859-1" if Globals.options.iso else "utf-8"
 
     for file in files:
         file = remove_newline(file)

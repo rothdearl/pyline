@@ -188,7 +188,7 @@ options:
   --change-tabs n                           change tabs to 'n' spaces
   -T, --show-tabs                           show tabs as >··
   --pif                                     treat piped input as file names
-  --iso                                     if --pif, use ISO-8859-1 for encoding instead of UTF-8
+  --iso                                     if --pif, use iso-8859-1 for encoding instead of utf-8
   -N, --name                                if --pif, show just the file name for find or exclude patterns
 
 search options:
