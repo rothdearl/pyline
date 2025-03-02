@@ -22,7 +22,7 @@ class Globals:
     STDIN_IS_PIPE: Final[bool] = not os.isatty(sys.stdin.fileno())
     STDOUT_IS_PIPE: Final[bool] = not os.isatty(sys.stdout.fileno())
     TAB: Final[str] = ">··" if OS_IS_WINDOWS else "➡"
-    VERSION: Final[str] = "1.10.6"
+    VERSION: Final[str] = "1.10.7"
     count_matches_sum: int
     options: argparse.Namespace
     repeated_blank_lines: int
@@ -205,18 +205,10 @@ def print_file_name(file_name: str) -> None:
     if Globals.STDOUT_IS_PIPE:
         print(f"[{file_name}]")
     else:
+        emoji = "📁" if os.path.isdir(file_name) else "📄"
         italics = "\u001b[3m"
 
-        if Globals.OS_IS_WINDOWS:
-            bold = "\033[1m"
-            left_bracket = f"{bold}[{Globals.COLOR_RESET}"
-            right_bracket = f"{bold}]{Globals.COLOR_RESET}"
-
-            print(f"{left_bracket}{Globals.COLOR_FILE_NAME}{italics}{file_name}{Globals.COLOR_RESET}{right_bracket}")
-        else:
-            emoji = "📁" if os.path.isdir(file_name) else "📄"
-
-            print(f"{emoji:2}{Globals.COLOR_FILE_NAME}{italics}{file_name}{Globals.COLOR_RESET}")
+        print(f"{emoji:2}{Globals.COLOR_FILE_NAME}{italics}{file_name}:{Globals.COLOR_RESET}")
 
 
 def print_lines() -> None:
