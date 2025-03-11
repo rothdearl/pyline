@@ -22,7 +22,7 @@ class Globals:
     STDIN_IS_PIPE: Final[bool] = not os.isatty(sys.stdin.fileno())
     STDOUT_IS_PIPE: Final[bool] = not os.isatty(sys.stdout.fileno())
     TAB: Final[str] = ">··" if OS_IS_WINDOWS else "➡"
-    VERSION: Final[str] = "1.10.7"
+    VERSION: Final[str] = "1.10.8"
     count_matches_sum: int
     options: argparse.Namespace
     repeated_blank_lines: int
@@ -254,6 +254,8 @@ def process_files(files) -> None:
             print_error_message(f"no such file or directory: {file}", stop_processing=False)
         except PermissionError:
             print_error_message(f"operation not permitted for: {file}", stop_processing=False)
+        except OSError:
+            print_error_message(f"error opening file: {file}", stop_processing=False)
         except UnicodeDecodeError:
             print_error_message(f"unable to decode file: {file}", stop_processing=False)
 
